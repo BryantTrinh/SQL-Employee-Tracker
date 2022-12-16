@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/BryantTrinh/SQL-Employee-Tracker#readme",
   "dependencies": {
+    "dotenv": "^16.0.3",
     "inquirer": "^9.1.4",
     "mysql2": "^2.3.3",
     "nodemon": "^2.0.20"
