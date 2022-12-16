@@ -1,0 +1,25 @@
+{
+  "name": "sql-employee-tracker",
+  "version": "1.0.0",
+  "description": "## Your Task",
+  "main": "index.js",
+  "scripts": {
+    "devStart": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BryantTrinh/SQL-Employee-Tracker.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BryantTrinh/SQL-Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/BryantTrinh/SQL-Employee-Tracker#readme",
+  "dependencies": {
+    "inquirer": "^9.1.4",
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.20"
+  }
+}
