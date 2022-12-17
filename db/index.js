@@ -6,15 +6,6 @@ class DB {
     this.connection = connection;
   }
 
-// we want to view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-
-  findAllEmployees() {
-    return this.connection.promise().query(
-      "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.salary, role.title, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
-    );
-  }
-
-
   // Create employee
 
   createEmployee(employee) {
@@ -50,6 +41,20 @@ updateEmployeeManager(employeeId, managerId) {
     );
   }
 
+  // Create a new department
+
+createDepartment(department) {
+  return this.connection.promise().query("INSERT INTO department SET?", department
+  );
+}
+
+// remove a department
+
+removeDepartment(departmentId) {
+  return this.connection.promise().query("DELETE FROM department WHERE id = ?", departmentId
+  );
+}
+
 // Be able to create a new role
 
 createRole(role) {
@@ -77,19 +82,27 @@ findAllDepartments() {
   );
 }
 
-// Create a new department
+// we want to view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
 
-createDepartment(department) {
-  return this.connection.promise().query("INSERT INTO department SET?", department
+  findAllEmployees() {
+    return this.connection.promise().query(
+      "SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.salary, role.title, CONCAT(manager.first_name, ' ', manager.last_name) AS manager FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department on role.department_id = department.id LEFT JOIN employee manager on manager.id = employee.manager_id;"
+    );
+  }
+
+
+findAllEmployeesByManager(managerId) {
+  return this.connection.promise().query("SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department on department.id = role.department_id WHERE maanger_id = ?;", managerId
+    );
+  }
+}
+
+
+findAllEmployeesByDepartment(departmentId) {
+  return this.connection.promise().query("SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id = ?;"
   );
 }
 
-// remove a department
-
-removeDepartment(departmentId) {
-  return this.connection.promise().query("DELETE FROM department WHERE id = ?", departmentId
-  );
-}
 
 // we need to find all department combine with employees/roles/and sum up department budget
 
@@ -98,17 +111,4 @@ viewDepartmentBudgets() {
   );
 }
 
-// We need to be able to find all the employees in a specific department and then join roles, and display roles
-
-findAllEmployeesByDepartment(departmentId) {
-  return this.connection.promise().query("SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id = role.id LEFT JOIN department department on role.department_id = department.id WHERE department.id = ?;"
-  );
-}
-
-// find employees by manager and be able to join to departments and roles and display title/department name
-
-findAllEmployeesByManager(managerId) {
-  return this.connection.promise().query("SELECT employee.id, employee.first_name, employee.last_name, department.name AS department, role.title FROM employee LEFT JOIN role on role.id = employee.role_id LEFT JOIN department on department.id = role.department_id WHERE maanger_id = ?;", managerId
-    );
-  }
-}
+module.exports = new DB(connection);
