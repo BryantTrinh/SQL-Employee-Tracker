@@ -211,3 +211,73 @@ function viewEmployeesByManager() {
     });
 }
 
+// function to update an employee's role
+
+function updateEmployeeRole() {
+  db.findAllEmployees()
+    .then(([rows]) => {
+      let employees = rows;
+      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+      }));
+      prompt([
+        {
+          type: "list",
+          name: "employeeId",
+          message: "Which employee's role do you want to update?",
+          choices: employeeChoices
+        }
+      ])
+        .then(res => {
+          let employeeId = res.employeeId;
+          db.findAllRoles()
+          .then(([rows]) => {
+            let roles = rows;
+            const roleChoices = roles.map(({ id, title}) => ({
+              name: title,
+              value: id
+            }));
+          prompt([
+            {
+              type: "list",
+              name: "roleId",
+              message: "Which role do you want to assign to the employee?",
+              choices: roleChoices
+            }
+          ])
+            .then(res => db.updateEmployeeRole(employeeId, res.roleId))
+            .then(() => console.log("Updated employee's, role"))
+            .then(() => loadMainPrompts())
+          });
+        });
+    })
+}
+
+
+// Function to delete employee
+
+function removeEmployee() {
+  db.findAllEmployees()
+    .then(([rows]) => {
+      let employees = rows;
+      const employeeChoices = employees.map(({ id, first_name, last_name }) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+      }));
+      prompt([
+        {
+          type: "list",
+          name: "employeeId",
+          message: "Select an employee you want to remove",
+          choices: employeeChoices
+        }
+      ])
+        .then(res => db.removeEmployee(res.employeeId))
+        .then(() => console.log("Removed employee from the database"))
+        .then(() => loadMainPrompts())
+    })
+}
+
+// function to update an employee's maanger
+
