@@ -2,6 +2,7 @@ const { prompt } = require('inquirer');
 const db = require('./db');
 require('console.table');
 const logo = require('asciiart-logo');
+const { removeEmployee, updateEmployeeRole, removeDepartment, removeRole } = require('./db');
 init();
 
 // We want to display the logo asciiart-logo and then load prompts
@@ -85,7 +86,79 @@ function loadMainPrompts() {
 				},
 			],
 		},
+    // use switch/case to let the user pick whatever choice they want
 	]).then((res) => {
 		let choice = res.choice;
-	});
+    switch(choice) {
+      case "VIEW_EMPLOYEES":
+        viewEmployees();
+      break;
+      case "VIEW_EMPLOYEES_BY_DEPARTMENT":
+        viewEmployeesByDepartment();
+      break;
+      case "VIEW_EMPLOYEES_BY_MANAGER":
+        viewEmployeesByManager();
+      break;
+      case "ADD_EMPLOYEE":
+        addEmployee();
+      break;
+      case "REMOVE_EMPLOYEE":
+        removeEmployee();
+      break;    
+      case "UPDATE_EMPLOYEE_ROLE":
+        updateEmployeeRole();
+      break;
+      case "UPDATE_EMPLOYEE_MANAGER":
+        updateEmployeeManager();
+      break;
+      case "VIEW_DEPARTMENTS":
+        viewDepartments();
+      break;
+      case "ADD_DEPARTMENT":
+        addDepartment();
+      break;
+      case "REMOVE_DEPARTMENT":
+      removeDepartment();
+      break;
+      case "VIEW_UTILIZED_BUDGET_BY_DEPARTMENT":
+        viewUtilizedBudgetsByDepartment();
+      break;  
+      case "VIEW_ROLES":
+        viewRoles();
+      break;
+      case "ADD_ROLE":
+        addRole();
+      break;
+      case "REMOVE_ROLE":
+        removeRole();
+      break;
+      default:
+        quit();
+    }
+	}
+  )
+}
+
+
+// Be able to view all employees that are in a department
+
+function viewEmployeesByDepartment() {
+  db.findAllDepartments()
+    .then(([rows]) => {
+      let departments = rows;
+      const departmentChoices = departments.map(({ id, name }) => ({
+        name: name,
+        value: id
+      }));
+    
+// function to be able to view all employees
+
+function viewEmployees() {
+  db.findAllEmployees()
+    .then(([rows]) => {
+      let employees = rows;
+      console.log("\n");
+      console.log(employees);
+    })
+    .then(() => loadMainPrompts());
 }
