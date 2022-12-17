@@ -150,7 +150,23 @@ function viewEmployeesByDepartment() {
         name: name,
         value: id
       }));
-    
+      prompt([
+        {
+          type: "list",
+          name: "departmentId",
+          message: "What department would you like to see the employees?",
+          choices: departmentChoices
+        }
+      ])
+        .then(res => db.findAllEmployeesByDepartment(res.departmentId))
+        .then(([rows]) => {
+          let employees = rows;
+          console.log("\n");
+          console.table(employees);
+        })
+        .then(() => loadMainPrompts())
+    });
+}  
 // function to be able to view all employees
 
 function viewEmployees() {
@@ -162,3 +178,36 @@ function viewEmployees() {
     })
     .then(() => loadMainPrompts());
 }
+
+// view employees by specific manager
+
+function viewEmployeesByManager() {
+  db.findAllEmployees()
+    .then(([rows]) => {
+      let manager = rows;
+      const managerChoices = managers.map(({ id, first_name, last_name}) => ({
+        name: `${first_name} ${last_name}`,
+        value: id
+      }));
+    prompt([
+      {
+        type: "list",
+        name: "managerId",
+        message: "Which employee do you want to see direct reports for?",
+        choices: managerChoices
+      }
+    ])
+      .then(res => db.findAllEmployeesByManager(res.managerId))
+      .then(([rows]) => {
+        let employees = rows;
+        console.log("\n");
+        if (employees.length === 0) {
+          console.log("The selected employee has no direct manager that they report to");
+        } else {
+          console.table(employees);
+        }
+      })
+      .then(() => loadMainPrompts())
+    });
+}
+
