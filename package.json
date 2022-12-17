@@ -1,8 +1,8 @@
 {
   "name": "sql-employee-tracker",
   "version": "1.0.0",
-  "description": "## Your Task",
-  "main": "index.js",
+  "description": "employee tracker",
+  "main": "server.js",
   "scripts": {
     "devStart": "nodemon server.js"
   },
